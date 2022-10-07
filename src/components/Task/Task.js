@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import PropTypes from 'prop-types'
 
@@ -12,7 +12,7 @@ export default class Task extends Component {
     }
 
     onCheckBoxClick = () => {
-        const { onComplete } = this.props
+        const {onComplete} = this.props
         onComplete(this.props.id)
         this.setState((state) => ({
             completed: !state.completed,
@@ -20,10 +20,10 @@ export default class Task extends Component {
     }
 
     render() {
-        const { completed } = this.state
+        const {completed} = this.state
         let classNames = ''
 
-        const { date } = this.state
+        const {date} = this.state
         if (completed) {
             classNames += ' completed'
         }
@@ -32,13 +32,14 @@ export default class Task extends Component {
                 {' '}
                 {/* className="completed" если задача выполнена className="editing" если нажимаем на редактировать  this.onCheckBoxClick.bind(this) */}
                 <div className="view">
-                    <input className="toggle" type="checkbox" onClick={this.onCheckBoxClick} />
+                    <input className="toggle" type="checkbox" onClick={this.onCheckBoxClick}/>
                     <label>
                         <span className="description">{this.props.name}</span>
-                        <span className="created">created {formatDistanceToNow(date, { addSuffix: true })}</span>
+
+                        <span className="created">created {formatDistanceToNow(date, {addSuffix: true})}</span>
                     </label>
-                    <button className="icon icon-edit" />
-                    <button className="icon icon-destroy" onClick={this.props.onDelete} />
+                    <button className="icon icon-edit"/>
+                    <button className="icon icon-destroy" onClick={this.props.onDelete}/>
                 </div>
             </li>
         )
