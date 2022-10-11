@@ -1,49 +1,37 @@
-import React, {Component} from 'react'
+import React, { useState, useContext,useEffect } from 'react';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
-export default class Task extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            completed: false,
-            date: new Date(),
-        }
+
+export default function Task () {
+    let [completed,setCompleted] = useState(false)
+    let date = useState(new Date())
+
+    let onCheckBoxClick = (props) => {
+        const {onComplete} = props
+        onComplete(props.id)
+        setCompleted(!completed)
     }
+    let classNames = '';
 
-    onCheckBoxClick = () => {
-        const {onComplete} = this.props
-        onComplete(this.props.id)
-        this.setState((state) => ({
-            completed: !state.completed,
-        }))
+    if (completed) {
+        classNames += ' completed'
     }
+    return (
+        <li className={classNames}>
+            {/* className="completed" если задача выполнена className="editing" если нажимаем на редактировать  this.onCheckBoxClick.bind(this) */}
+            <div className="view">
+            <input className="toggle" type="checkbox" onClick={this.onCheckBoxClick}/>
+            <label>
+              <span className="description">{this.props.name}</span>
 
-    render() {
-        const {completed} = this.state
-        let classNames = ''
-
-        const {date} = this.state
-        if (completed) {
-            classNames += ' completed'
-        }
-        return (
-            <li className={classNames}>
-                {' '}
-                {/* className="completed" если задача выполнена className="editing" если нажимаем на редактировать  this.onCheckBoxClick.bind(this) */}
-                <div className="view">
-                    <input className="toggle" type="checkbox" onClick={this.onCheckBoxClick}/>
-                    <label>
-                        <span className="description">{this.props.name}</span>
-
-                        <span className="created">created {formatDistanceToNow(date, {addSuffix: true})}</span>
-                    </label>
-                    <button className="icon icon-edit"/>
-                    <button className="icon icon-destroy" onClick={this.props.onDelete}/>
-                </div>
-            </li>
-        )
-    }
+            <span className="created">created {formatDistanceToNow(date, {addSuffix: true})}</span>
+                 </label>
+               <button className="icon icon-edit"/>
+             <button className="icon icon-destroy" onClick={this.props.onDelete}/>
+                    </div>
+                 </li>
+       )
 }
 Task.defaultProps = {
     date: Date.now(),

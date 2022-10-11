@@ -1,111 +1,99 @@
-import React, { Component } from 'react';
+import React, { useState, useContext,useEffect } from 'react';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-
 import TaskList from '../TaskList/TaskList';
 import NewTaskForm from '../NewTaskForm/NewTaskForm';
 import Footer from '../Footer/Footer';
 
-export default class App extends Component {
-    constructor(props) {
-        super(props);
-        this.maxId = 10;
-        this.state = {
-            taskList: [],
-            doneCounter: 0,
-        };
-        this.addItem = this.addItem.bind(this);
-        this.counter = this.counter.bind(this);
-        this.deleteAllCompletedTasks = this.deleteAllCompletedTasks.bind(this);
-        this.filterCompleted = this.filterCompleted.bind(this);
-        this.filterAll = this.filterAll.bind(this);
-        this.filterActive = this.filterActive.bind(this);
-    }
 
-    createTodoItem(name) {
-        this.maxId += 1;
+export default function App () {
+    let [maxId,setMaxID] = useState(10)
+    let [doneCounter,setDoneCounter] = useState(0)
+    let [taskList,setTaskList ]= useState([])
+    let completed = useState(false)
+    let taskListContext = React.createContext(taskList)
+
+    let createTodoItem = (name) => {
+        setMaxID(maxId = maxId + 1)
         return {
             name,
-            completed: false,
-            id: this.maxId,
+            id : maxId,
         };
     }
 
-    addItem(name) {
-        const newItem = this.createTodoItem(name);
-        this.setState(({ taskList, doneCounter }) => {
-            const newArr = [...taskList, newItem];
-            return {
-                doneCounter: doneCounter + 1,
-                taskList: newArr,
-            };
-        });
+    let addItem = (name) => {
+        const newItem = createTodoItem(name);
+        const newArr = [...taskList, newItem];
+        return  setDoneCounter(doneCounter + 1);
     }
 
-    counter() {
-        const doneFilter = this.state.taskList.filter(
-            (item) => item.completed
+    let counter = () => {
+        const doneFilter = taskList.filter(
+            (item) => item !== completed
         ).length;
-        this.setState(() => ({
-            doneCounter: this.state.taskList.length - doneFilter,
-        }));
+        /*this.setState(() => ({
+            doneCounter: taskList.length - doneFilter,
+        }));*/
+        setDoneCounter(taskList.length - doneFilter)
     }
 
-    deleteAllCompletedTasks() {
-        this.setState(({ taskList }) => {
+    let deleteAllCompletedTasks = () => {
+        /*this.setState(({ taskList }) => {
             const arr = taskList.filter((item) => !item.completed);
             return { taskList: arr };
-        });
+        });*/
+        const arr = taskList.filter((item) => !item.completed);
+        setTaskList(taskList = arr)
+
     }
 
-    filterCompleted() {
-        this.filterAll();
-        const c = this.state.taskList.filter((item) => !item.completed);
+    let filterCompleted = () => {
+        filterAll();
+        const c = taskList.filter((item) => !item.completed);
         c.map((it) => {
             return (document.getElementById(`${it.id}`).style.display = 'none');
         });
     }
 
-    date() {
+    let date = () => {
         const date = new Date();
-
         return formatDistanceToNow(date, new Date(), { addSuffix: true });
     }
 
-    filterAll() {
-        this.state.taskList.map((it) => {
+    let filterAll = () => {
+       taskList.map((it) => {
             return (document.getElementById(`${it.id}`).style.display = "inline");
         });
     }
 
-    filterActive() {
-        this.filterAll();
-        const c = this.state.taskList.filter((item) => item.completed);
+    let filterActive = () => {
+        filterAll();
+        const c = taskList.filter((item) => item.completed);
         c.map((it) => {
             return (document.getElementById(`${it.id}`).style.display = 'none');
         });
     }
-
-    render() {
-        return (
-            <section className="todoapp">
-                <header className="header">
-                    <h1>todos</h1>
-                    <NewTaskForm addItem={this.addItem} />
-                </header>
-                <TaskList
-                    taskList={this.state.taskList}
-                    counter={this.counter}
-                    date={this.date}
-                />
-                <Footer
-                    doneCounter={this.state.doneCounter}
-                    deleteAllCompletedTask={this.deleteAllCompletedTasks}
-                    taskList={this.state.taskList}
-                    filterCompleted={this.filterCompleted}
-                    filterAll={this.filterAll}
-                    filterActive={this.filterActive}
-                />
-            </section>
-        );
-    }
+    return (
+        <section className="todoapp">
+        <taskListContext.Provider value={taskList}>
+            <header className="header">
+                <h1>todos</h1>
+                <NewTaskForm addItem={addItem} />
+            </header>
+            <TaskList
+                taskList={taskList}
+                value={taskList}
+                counter={counter}
+                date={date}
+            />
+            <Footer
+                doneCounter={doneCounter}
+                deleteAllCompletedTask={deleteAllCompletedTasks}
+                taskList={taskList}
+                filterCompleted={filterCompleted}
+                filterAll={filterAll}
+                filterActive={filterActive}
+            />
+        </taskListContext.Provider>
+        </section>
+    )
 }
