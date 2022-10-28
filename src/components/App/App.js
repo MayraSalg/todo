@@ -1,49 +1,35 @@
 import React, { useState, useContext,useEffect } from 'react';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import TaskList from '../TaskList/TaskList';
 import NewTaskForm from '../NewTaskForm/NewTaskForm';
 import Footer from '../Footer/Footer';
-
+import {Context} from "../Context/Context";
 
 export default function App () {
-    let [maxId,setMaxID] = useState(10)
+
+    let [Id,setId] = useState(0)
     let [doneCounter,setDoneCounter] = useState(0)
     let [taskList,setTaskList ]= useState([])
-    let completed = useState(false)
-    let taskListContext = React.createContext(taskList)
+    let [completed,setCompleted]=useState(false)
 
-    let createTodoItem = (name) => {
-        setMaxID(maxId = maxId + 1)
-        return {
-            name,
-            id : maxId,
-        };
+    let addItem = (text) => {
+    const newItem = {
+        text,
+        id: Id
+    };
+    setId(Id + 1);
+    setTaskList([...taskList, newItem]);
+    setDoneCounter(doneCounter = doneCounter + 1)
+
     }
 
-    let addItem = (name) => {
-        const newItem = createTodoItem(name);
-        const newArr = [...taskList, newItem];
-        return  setDoneCounter(doneCounter + 1);
-    }
+    /*let deleteAllCompletedTasks = () => {
+        //const arr = taskList.filter((item) =>!item.completed );
+        //return setTaskList(taskList.filter((item) =>!item.completed ))
+        console.log("I`m alive")
+    }*/
 
-    let counter = () => {
-        const doneFilter = taskList.filter(
-            (item) => item !== completed
-        ).length;
-        /*this.setState(() => ({
-            doneCounter: taskList.length - doneFilter,
-        }));*/
-        setDoneCounter(taskList.length - doneFilter)
-    }
-
-    let deleteAllCompletedTasks = () => {
-        /*this.setState(({ taskList }) => {
-            const arr = taskList.filter((item) => !item.completed);
-            return { taskList: arr };
-        });*/
-        const arr = taskList.filter((item) => !item.completed);
-        setTaskList(taskList = arr)
-
+    function deleteAllCompletedTask() {
+        return setTaskList(taskList.filter((item) =>!item.completed ))
     }
 
     let filterCompleted = () => {
@@ -54,10 +40,10 @@ export default function App () {
         });
     }
 
-    let date = () => {
+    /*let date = () => {
         const date = new Date();
         return formatDistanceToNow(date, new Date(), { addSuffix: true });
-    }
+    }*/
 
     let filterAll = () => {
        taskList.map((it) => {
@@ -73,27 +59,17 @@ export default function App () {
         });
     }
     return (
+        <Context.Provider value={{ taskList, addItem, deleteAllCompletedTask,Id,doneCounter,
+                                    filterActive,filterAll,filterCompleted,setDoneCounter,
+                                    completed,setCompleted}}>
         <section className="todoapp">
-        <taskListContext.Provider value={taskList}>
             <header className="header">
                 <h1>todos</h1>
-                <NewTaskForm addItem={addItem} />
+                <NewTaskForm/>
             </header>
-            <TaskList
-                taskList={taskList}
-                value={taskList}
-                counter={counter}
-                date={date}
-            />
-            <Footer
-                doneCounter={doneCounter}
-                deleteAllCompletedTask={deleteAllCompletedTasks}
-                taskList={taskList}
-                filterCompleted={filterCompleted}
-                filterAll={filterAll}
-                filterActive={filterActive}
-            />
-        </taskListContext.Provider>
+            <TaskList />
+            <Footer/>
         </section>
+        </Context.Provider>
     )
 }

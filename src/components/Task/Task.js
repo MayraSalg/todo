@@ -1,45 +1,45 @@
-import React, { useState, useContext,useEffect } from 'react';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import React from 'react';
 import PropTypes from 'prop-types';
+import {Context} from "../Context/Context";
 
 
 export default function Task () {
-    let [completed,setCompleted] = useState(false)
-    let date = useState(new Date())
+    let {completed,setCompleted,item,onDelete,onComplete} = React.useContext(Context);
 
-    let onCheckBoxClick = (props) => {
-        const {onComplete} = props
-        onComplete(props.id)
-        setCompleted(!completed)
+    let onCheckBoxClick = () => {
+       onComplete(item.id)
+       setCompleted(!completed)
+        /*  const { onComplete } = this.props
+    onComplete(this.props.id)
+    this.setState((state) => ({
+      completed: !state.completed,
+    }))*/
     }
-    let classNames = '';
 
-    if (completed) {
-        classNames += ' completed'
+    let classNames = '';
+    if (item.completed) {
+        classNames += 'completed'
     }
     return (
         <li className={classNames}>
-            {/* className="completed" если задача выполнена className="editing" если нажимаем на редактировать  this.onCheckBoxClick.bind(this) */}
+            {/* //onClick={onDelete} className="completed" если задача выполнена className="editing" если нажимаем на редактировать  this.onCheckBoxClick.bind(this) */}
             <div className="view">
-            <input className="toggle" type="checkbox" onClick={this.onCheckBoxClick}/>
-            <label>
-              <span className="description">{this.props.name}</span>
-
-            <span className="created">created {formatDistanceToNow(date, {addSuffix: true})}</span>
-                 </label>
-               <button className="icon icon-edit"/>
-             <button className="icon icon-destroy" onClick={this.props.onDelete}/>
-                    </div>
-                 </li>
+                <input className="toggle" type="checkbox" onClick={onCheckBoxClick}/>
+                    <label>
+                        <span className="description">{item.text}</span>
+                        <span className="created"> </span>
+                    </label>
+                <button className="icon icon-edit"/>
+                <button className="icon icon-destroy" onClick={onDelete}/>
+            </div>
+        </li>
        )
 }
 Task.defaultProps = {
-    date: Date.now(),
     completed: false,
 }
 Task.propTypes = {
     completed: PropTypes.bool,
-    date: PropTypes.func,
     name: PropTypes.string,
     onComplete: PropTypes.func,
 }

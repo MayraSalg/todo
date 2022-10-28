@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-export default function TasksFilterItem (props) {
+export default function TasksFilterItem ({filterCompleted,filterActive,filterAll}) {
 
         return (
             <ul className="filters">
                 <li>
-                    <button onClick={() => props.filterAll()}>All</button>
+                    <button onClick={() =>filterAll()}>All</button>
                 </li>
                 <li>
-                    <button onClick={() => props.filterActive()}>Active</button>
+                    <button onClick={() => filterActive()}>Active</button>
                 </li>
                 <li>
-                    <button onClick={() => props.filterCompleted()}>Completed</button>
+                    <button onClick={() =>filterCompleted()}>Completed</button>
                 </li>
             </ul>
         );

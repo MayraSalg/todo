@@ -2,22 +2,24 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import TasksFilterItem from '../TaskFilter/TaskFilter';
+import {Context} from "../Context/Context";
 
-export default function Footer (props) {
+
+export default function Footer () {
+    let {doneCounter,filterCompleted,filterAll,filterActive,deleteAllCompletedTask} = React.useContext(Context);
+
     return (
         <footer className="footer">
-            <span className="todo-count">{props.doneCounter}</span>
+            <span className="todo-count">{doneCounter}</span>
             <TasksFilterItem
-                filterCompleted={props.filterCompleted}
-                filterAll={props.filterAll}
-                filterActive={props.filterActive}
+                filterCompleted={filterCompleted}
+                filterAll={filterAll}
+                filterActive={filterActive}
             />
-            <button
-                onClick={() => props.deleteAllCompletedTask(props.name)}
-                className="clear-completed"
-            >
+            <button className="clear-completed" onClick = {  deleteAllCompletedTask}>
                 Clear completed
             </button>
+
         </footer>
     );
 }
