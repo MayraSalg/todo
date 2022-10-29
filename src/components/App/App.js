@@ -11,15 +11,17 @@ export default function App () {
     let [taskList,setTaskList ]= useState([])
     let [completed,setCompleted]=useState(false)
 
-    let addItem = (text) => {
+    let addItem = (values) => {
     const newItem = {
-        text,
+        text: values.todo,
+        min: Number(values.min),
+        sec: Number(values.sec),
         id: Id
     };
     setId(Id + 1);
     setTaskList([...taskList, newItem]);
-    setDoneCounter(doneCounter = doneCounter + 1)
-
+    setDoneCounter(doneCounter = doneCounter + 1);
+    console.log(newItem);
     }
 
     /*let deleteAllCompletedTasks = () => {

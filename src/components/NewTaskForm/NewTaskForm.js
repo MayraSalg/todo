@@ -3,33 +3,77 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import {Context} from "../Context/Context";
 
 export default function NewTaskForm() {
-    let [label, setLabel] = useState("")
+    const initialValues = {
+        todo: '',
+        min: 0,
+        sec: 0
+    };
+    const [values, setValues] = useState(initialValues);
+
+    const handleInputChange = (e) => {
+        const {name, value} = e.target;
+        setValues({
+            ...values,
+            [name]: value,
+        });
+    };
+
     let {addItem} = React.useContext(Context);
 
-    let onLabelChange = (e) => {
-        setLabel(e.target.value)
-
-    }
-
     let onSubmit = (e) => {
+        console.log(values)
         e.preventDefault()
-        addItem(label)
-        setLabel('')
+        addItem(values)
+        setValues(initialValues)
     }
 
     return (
-        <Context.Provider value={label}>
-            <form onSubmit={onSubmit} className="new-todo-form">
-                <input
-                    className="new-todo"
-                    placeholder="What needs to be done?"
-                    autoFocus
-                    onChange={onLabelChange}
-                    value={label}
-                />
-
-            </form>
-        </Context.Provider>
-
+        <form className="new-todo-form">
+            <input
+                className="new-todo"
+                placeholder="What needs to be done?"
+                autoFocus
+                onChange={handleInputChange}
+                name="todo"
+                value={values.todo}
+                onKeyDown={
+                    (e) => {
+                        if (e.code == 'Enter') {
+                            onSubmit(e)
+                        }
+                    }
+                }
+            />
+            <input
+                className="new-todo-form__timer"
+                placeholder="Min"
+                autoFocus
+                onChange={handleInputChange}
+                name="min"
+                value={values.min}
+                onKeyDown={
+                    (e) => {
+                        if (e.code == 'Enter') {
+                            onSubmit(e)
+                        }
+                    }
+                }
+            />
+            <input
+                className="new-todo-form__timer"
+                placeholder="Sec"
+                autoFocus
+                onChange={handleInputChange}
+                name="sec"
+                value={values.sec}
+                onKeyDown={
+                    (e) => {
+                        if (e.code == 'Enter') {
+                            onSubmit(e)
+                        }
+                    }
+                }
+            />
+        </form>
     )
 }
