@@ -1,6 +1,7 @@
 import React, {useState, useContext, useEffect} from 'react';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import {Context} from "../Context/Context";
+import {number} from "prop-types";
 
 export default function NewTaskForm() {
     const initialValues = {
@@ -26,6 +27,7 @@ export default function NewTaskForm() {
         addItem(values)
         setValues(initialValues)
     }
+
 
     return (
         <form className="new-todo-form">
